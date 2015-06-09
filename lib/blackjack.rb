@@ -112,41 +112,86 @@ class Game
     whose_hand.add_card(@deck.draw!)
     whose_hand.add_card(@deck.draw!)
     summary = "#{their_name} was dealt #{whose_hand.cards[0].value}#{whose_hand.cards[0].suit}\n"
-    summary += "#{their_name} was dealt #{whose_hand.cards[1].value}#{whose_hand.cards[0].suit}"
-    summary
+    summary += "#{their_name} was dealt #{whose_hand.cards[1].value}#{whose_hand.cards[1].suit}\n"
+    summary += "#{their_name} Score: #{whose_hand.best_score}\n"
+    puts summary
   end
 
   def deal(whose_hand, their_name)
     whose_hand.add_card(@deck.draw!)
-    summary = "#{their_name} was dealt #{whose_hand.cards[0].value}#{whose_hand.cards[0].suit}\n"
+    summary = "\n#{their_name} was dealt #{whose_hand.cards.last.value}#{whose_hand.cards.last.suit}\n"
     summary
   end
 
-  def prompt_player(player_choice)
-    unless player_choice == "s"
-      if player_choice == "h"
-        summary = "#{deal(player_hand, "Player")}"
-        summary += "Player Score: #{player_hand.best_score}"
-      elsif player_choice != "h"
-        "Input is invalid, try again"
-      end
-      # next, define stand by calling the best_score method on it and outputting it
+  def hit(whose_hand, their_name)
+    summary = "#{deal(whose_hand, their_name)}"
+    summary += "#{their_name} Score: #{whose_hand.best_score}\n"
+    puts summary
+  end
+
+  def stand
+    puts "You stood\n\n"
+  end
+
+  def hit_or_stand
+    print "Hit or stand (H/S):"
+  end
+
+  def dealer_turns
+    initial_deal(dealer_hand, "Dealer")
+    if dealer_hand.best_score < 17
+      hit(dealer_hand, "Dealer")
+    elsif dealer_hand.best_score == 21
+      puts "Dealer stands"
+    elsif dealer_hand.best_score > 21
+      puts "Dealer busts"
+    end
+  end
+
+  def continue_turn
+    if player_hand.best_score == 21
+      puts "\nPlayer Score is 21! End turn!\n"
+      dealer_turns
+    elsif player_hand.best_score > 21
+      "\nPlayer has busted. :( You lost!"
+    elsif player_hand.best_score < 21
+      hit_or_stand
+      prompt_player
+    end
+  end
+
+  def prompt_player
+    player_choice = gets.chomp.downcase
+    if player_choice == "s"
+      stand
+      dealer_turns
+    elsif player_choice == "h"
+      hit(player_hand, "Player")
+      continue_turn
+    else
+      puts "Invalid Input, try again.\n"
+      continue_turn
+    end
+  end
+
+  def winner
+    if dealer_hand.best_score > 21
+      "You win!"
+    elsif dealer_hand.best_score > player_hand.best_score
+      "Dealer wins!"
+    elsif player_hand.best_score > dealer_hand.best_score
+      "You win!"
     end
   end
 
 end
 
+def new_game
+  game = Game.new(Deck.new, Hand.new, Hand.new)
+  game.welcome
+  puts game.initial_deal(game.player_hand, "Player")
+  puts game.continue_turn
+  puts game.winner
+end
 
-# def new_game
-#   game = Game.new(Deck.new, Hand.new, Hand.new)
-#   game.welcome
-#   puts game.initial_deal(game.player_hand, "Player")
-#   puts "Player Score: #{game.player_hand.best_score}"
-#   puts "Hit or stand (H/S):"
-#   player_choice = gets.chomp.downcase
-#   unless player_choice == "s"
-#     puts game.prompt_player(player_choice)
-#   end
-# end
-#
-# new_game
+new_game
