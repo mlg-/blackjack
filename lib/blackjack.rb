@@ -144,7 +144,9 @@ end
 #   puts "Player Score: #{game.player_hand.best_score}"
 #   puts "Hit or stand (H/S):"
 #   player_choice = gets.chomp.downcase
-#   puts game.prompt_player(player_choice)
-#  end
+#   unless player_choice == "s"
+#     puts game.prompt_player(player_choice)
+#   end
+# end
 #
 # new_game
