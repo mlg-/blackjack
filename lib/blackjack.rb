@@ -130,11 +130,12 @@ class Game
       elsif player_choice != "h"
         "Input is invalid, try again"
       end
-    # stand
+      # next, define stand by calling the best_score method on it and outputting it
     end
   end
 
 end
+
 
 # def new_game
 #   game = Game.new(Deck.new, Hand.new, Hand.new)
