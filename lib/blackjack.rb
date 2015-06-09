@@ -108,33 +108,42 @@ class Game
     "Welcome to Blackjack!"
   end
 
+  def initial_deal(whose_hand, their_name)
+    whose_hand.add_card(@deck.draw!)
+    whose_hand.add_card(@deck.draw!)
+    summary = "#{their_name} was dealt #{whose_hand.cards[0].value}#{whose_hand.cards[0].suit}\n"
+    summary += "#{their_name} was dealt #{whose_hand.cards[1].value}#{whose_hand.cards[0].suit}"
+    summary
+  end
+
   def deal(whose_hand, their_name)
     whose_hand.add_card(@deck.draw!)
-    message = "#{their_name} was dealt #{whose_hand.cards[0].value}#{whose_hand.cards[0].suit}"
+    summary = "#{their_name} was dealt #{whose_hand.cards[0].value}#{whose_hand.cards[0].suit}\n"
+    summary
   end
 
   def prompt_player(player_choice)
-
-    while player_choice != 's'
-      if player_choice == 'h'
-        deal(player_hand, "Player")
-      elsif player_choice != 'h'
+    unless player_choice == "s"
+      if player_choice == "h"
+        summary = "#{deal(player_hand, "Player")}"
+        summary += "Player Score: #{player_hand.best_score}"
+      elsif player_choice != "h"
         "Input is invalid, try again"
-        break
       end
-    end
     # stand
+    end
   end
 
 end
 
 # def new_game
-#   Game.new(Deck.new, Hand.new, Hand.new)
+#   game = Game.new(Deck.new, Hand.new, Hand.new)
 #   game.welcome
-#   game.deal(game.player_hand, "Player")
+#   puts game.initial_deal(game.player_hand, "Player")
+#   puts "Player Score: #{game.player_hand.best_score}"
 #   puts "Hit or stand (H/S):"
 #   player_choice = gets.chomp.downcase
-#   game.prompt_player(player_choice)
+#   puts game.prompt_player(player_choice)
 #  end
 #
 # new_game
